@@ -3,12 +3,13 @@ const app=express();
 const path=require("path");
 const mongoose = require('mongoose');
 const Chat=require("./models/chat.js");
-
+const methodOverride=require("method-override");
 
 app.set("views", path.join(__dirname,"views"));
 app.set("view engine","ejs");
 app.use(express.static(path.join(__dirname,"public")));
 app.use(express.urlencoded({extended:true}));
+app.use(methodOverride("_method"));
 
 main().then(()=>{
     console.log("connection successful");
@@ -40,6 +41,7 @@ app.post("/chats",(req,res)=>{
         to: to,
         msg: msg,
         created_at: new Date(),
+        updated_at:new Date(),
     });
   //  console.log(newChat);
      newChat.save()
@@ -60,6 +62,29 @@ app.get("/chats/:id/edit",async(req,res)=>{
     res.render("edit.ejs",{ chat });
 
 });
+//update route
+app.put("/chats/:id",async (req,res)=>{
+let { id }=req.params;
+let { msg:newMsg }=req.body;
+let updatedChat=await Chat.findByIdAndUpdate(id,{msg:newMsg,updated_at:new Date()},{runValidators: true,new:true});
+console.log(updatedChat);
+console.log(updatedChat.created_at);
+console.log(updatedChat.updated_at);
+
+// let upadtedChat= Chat({
+//     updated_at:new Date(),
+// });
+// updatedChat.save()
+// .then((res)=>{
+//    console.log("chat was saved");
+// })
+// .catch((err)=>{
+//    console.log(err);
+// });
+res.redirect("/chats");
+});
+
+
 app.get("/",(req,res)=>{
     res.send("Root route is working");
 });
