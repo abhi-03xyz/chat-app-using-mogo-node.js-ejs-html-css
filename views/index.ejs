@@ -21,12 +21,17 @@
                 <form action="/chats/<%= chat._id %>/edit" method="get">
                     <button>edit chat</button>
                 </form>
+                <br>
+                <form method="post" action="/chats/<%= chat._id %>?_method=DELETE" >
+                    <button>Remove</button>
+                </form>
             </div>
             <p>Received by: <b><%= chat.to%></b></p>
             <hr>
          <p>Time: <%= chat.created_at.toString().split(" ")[4] %></p>
          <p>Date: <%= chat.created_at.toString().split(" ").slice(0,4).join("-") %></p>
-        
+        <hr>
+        <p>last updated on: <%= chat.updated_at.toString().split(" ").slice(0,4).join("-") %> @<%= chat.updated_at.toString().split(" ")[4] %></p>
          
         </div>
         <br><br>

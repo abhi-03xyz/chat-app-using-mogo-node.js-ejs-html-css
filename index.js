@@ -68,22 +68,19 @@ let { id }=req.params;
 let { msg:newMsg }=req.body;
 let updatedChat=await Chat.findByIdAndUpdate(id,{msg:newMsg,updated_at:new Date()},{runValidators: true,new:true});
 console.log(updatedChat);
-console.log(updatedChat.created_at);
-console.log(updatedChat.updated_at);
+console.log(updatedChat.created_at.toString().split(" ")[4]);
+console.log(updatedChat.updated_at.toString().split(" ")[4]);
 
-// let upadtedChat= Chat({
-//     updated_at:new Date(),
-// });
-// updatedChat.save()
-// .then((res)=>{
-//    console.log("chat was saved");
-// })
-// .catch((err)=>{
-//    console.log(err);
-// });
+
 res.redirect("/chats");
 });
-
+//destroy route
+app.delete("/chats/:id",async(req,res)=>{
+ let { id }=req.params;
+ let deletedChat=await Chat.findByIdAndDelete(id);
+ console.log(deletedChat);
+ res.redirect("/chats");
+});
 
 app.get("/",(req,res)=>{
     res.send("Root route is working");
